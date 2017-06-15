@@ -9,7 +9,7 @@
     "omnipay",
     "pay",
     "payment",
-    "purchase",
+    "purchase"
   ],
   "homepage": "https://github.com/wjminons/omnipay-pingpp",
   "license": "MIT",
