@@ -1,0 +1,31 @@
+{
+  "name": "wjminions/omnipay-pingpp",
+  "type": "library",
+  "description": "Pingpp gateway for Omnipay payment processing library",
+  "keywords": [
+    "pingpp",
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment",
+    "purchase"
+  ],
+  "homepage": "https://github.com/wjminons/omnipay-pingpp",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "wjminions",
+      "email": "wjminions@gmail.com",
+      "homepage": "https://github.com/wjminions/omnipay-pingpp"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\Pingpp\\": "src/"
+    }
+  },
+  "require": {
+    "omnipay/common": "~2.0"
+  }
+}
