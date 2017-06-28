@@ -9,7 +9,7 @@ use Omnipay\Pingpp\Helper;
  * Class ChargeCompletePurchaseRequest
  * @package Omnipay\Pingpp\Message
  */
-class ChargeCompletePurchaseRequest extends AbstractChargeRequest
+class ChargeCompleteRefundRequest extends AbstractChargeRequest
 {
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
@@ -76,6 +76,6 @@ class ChargeCompletePurchaseRequest extends AbstractChargeRequest
             echo 'verification error';
         }
 
-        return $this->response = new ChargeCompletePurchaseResponse($this, $data);
+        return $this->response = new ChargeCompleteRefundResponse($this, $data);
     }
 }

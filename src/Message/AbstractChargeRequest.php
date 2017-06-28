@@ -119,6 +119,18 @@ abstract class AbstractChargeRequest extends AbstractRequest
     }
 
 
+    public function setPublicKeyPath($value)
+    {
+        return $this->setParameter('public_key_path', $value);
+    }
+
+
+    public function getPublicKeyPath()
+    {
+        return $this->getParameter('public_key_path');
+    }
+
+
     public function setCurrency($value)
     {
         return $this->setParameter('currency', $value);
@@ -131,14 +143,14 @@ abstract class AbstractChargeRequest extends AbstractRequest
     }
 
 
-    public function setPublicKeyPath($value)
+    public function setChId($value)
     {
-        return $this->setParameter('public_key_path', $value);
+        return $this->setParameter('ch_id', $value);
     }
 
 
-    public function getPublicKeyPath()
+    public function getChId()
     {
-        return $this->getParameter('public_key_path');
+        return $this->getParameter('ch_id');
     }
 }

@@ -130,6 +130,18 @@ class ChargeGateway extends AbstractGateway
     }
 
 
+    public function setPublicKeyPath($value)
+    {
+        return $this->setParameter('public_key_path', $value);
+    }
+
+
+    public function getPublicKeyPath()
+    {
+        return $this->getParameter('public_key_path');
+    }
+
+
     public function setCurrency($value)
     {
         return $this->setParameter('currency', $value);
@@ -139,6 +151,18 @@ class ChargeGateway extends AbstractGateway
     public function getCurrency()
     {
         return $this->getParameter('currency');
+    }
+
+
+    public function setChId($value)
+    {
+        return $this->setParameter('ch_id', $value);
+    }
+
+
+    public function getChId()
+    {
+        return $this->getParameter('ch_id');
     }
 
 
@@ -166,14 +190,8 @@ class ChargeGateway extends AbstractGateway
     }
 
 
-    public function setPublicKeyPath($value)
+    public function completeRefund(array $parameters = array())
     {
-        return $this->setParameter('public_key_path', $value);
-    }
-
-
-    public function getPublicKeyPath()
-    {
-        return $this->getParameter('public_key_path');
+        return $this->createRequest('\Omnipay\Pingpp\Message\ChargeCompleteRefundRequest', $parameters);
     }
 }

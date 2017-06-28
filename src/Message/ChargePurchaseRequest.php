@@ -75,7 +75,7 @@ class ChargePurchaseRequest extends AbstractChargeRequest
      */
     public function sendData($data)
     {
-        require dirname(__FILE__) . '/../../../../pingplusplus/pingpp-php/init.php';
+//        require dirname(__FILE__) . '/../../../../pingplusplus/pingpp-php/init.php';
 
         /**
          * 设置请求签名密钥，密钥对需要你自己用 openssl 工具生成，如何生成可以参考帮助中心：https://help.pingxx.com/article/123161；
