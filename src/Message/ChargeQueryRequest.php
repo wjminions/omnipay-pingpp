@@ -20,26 +20,37 @@ class ChargeQueryRequest extends AbstractChargeRequest
      */
     public function getData()
     {
-        $this->validate('certPath', 'certPassword', 'orderId', 'txnTime', 'txnAmt');
-
-        $data = array(
-            'version'     => $this->getVersion(),
-            'encoding'    => $this->getEncoding(),
-            'certId'      => $this->getCertId(),
-            'signMethod'  => $this->getSignMethod(),
-            'txnType'     => '00',
-            'txnSubType'  => '00',
-            'bizType'     => $this->getBizType(),
-            'accessType'  => $this->getAccessType(),
-            'channelType' => $this->getChannelType(),
-            'orderId'     => $this->getOrderId(),
-            'merId'       => $this->getMerId(),
-            'txnTime'     => $this->getTxnTime(),
+        $this->validate(
+            'amount',
+            'subject',
+            'app_key',
+            'ch_id'
         );
 
-        $data = Helper::filterData($data);
-
-        $data['signature'] = Helper::getParamsSignatureWithRSA($data, $this->getCertPath(), $this->getCertPassword());
+        $data = array (
+            //商户订单号
+            'order_no'        => $this->getOrderNo(),
+            //交易金额，单位分
+            'amount'         => $this->getAmount(),
+            //主题
+            'subject' => $this->getSubject(),
+            //内容
+            'body' => $this->getBody(),
+            //app_id
+            'app' => $this->getApp(),
+            //支付方式
+            'channel' => $this->getChannel(),
+            //callback地址
+            'callback' => $this->getCallback(),
+            //app_key
+            'app_key' => $this->getAppKey(),
+            //货币
+            'currency' => $this->getCurrency(),
+            //私钥地址
+            'private_key_path' => $this->getPrivateKeyPath(),
+            //交易id
+            'ch_id' => $this->getChId()
+        );
 
         return $data;
     }
@@ -55,8 +66,12 @@ class ChargeQueryRequest extends AbstractChargeRequest
     public function sendData($data)
     {
 
-        $data = $this->httpRequest('query', $data);
+        \Pingpp\Pingpp::setApiKey($data['app_key']);           // 设置 API Key
+        \Pingpp\Pingpp::setPrivateKeyPath($data['private_key_path']);   // 设置私钥
 
-        return $this->response = new ChargeResponse($this, $data);
+        // 通过发起一次退款请求创建一个新的 refund 对象，只能对已经发生交易并且没有全额退款的 charge 对象发起退款
+        $ch = \Pingpp\Charge::retrieve($data['ch_id']);// Charge 对象的 id
+
+        return json_decode($ch);// 输出 Ping++ 返回 Charge 对象
     }
 }
