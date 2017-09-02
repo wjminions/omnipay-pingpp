@@ -21,20 +21,11 @@ class ChargeQueryRequest extends AbstractChargeRequest
     public function getData()
     {
         $this->validate(
-            'amount',
-            'subject',
             'app_key',
             'ch_id'
         );
 
         $data = array (
-            //商户订单号
-            'order_no'        => $this->getOrderNo(),
-            //交易金额，单位分
-            'amount'         => $this->getAmount(),
-            //主题
-            'subject' => $this->getSubject(),
-            //内容
             'body' => $this->getBody(),
             //app_id
             'app' => $this->getApp(),
