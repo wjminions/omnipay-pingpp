@@ -7,6 +7,7 @@ use Omnipay\Pingpp\Helper;
 
 /**
  * Class ChargeQueryRequest
+ *
  * @package Omnipay\Pingpp\Message
  */
 class ChargeQueryRequest extends AbstractChargeRequest
@@ -22,25 +23,24 @@ class ChargeQueryRequest extends AbstractChargeRequest
     {
         $this->validate(
             'app_key',
-            'ch_id'
+            'order_no'
         );
 
-        $data = array (
-            'body' => $this->getBody(),
+        $data = array(
             //app_id
-            'app' => $this->getApp(),
+            'app'              => $this->getApp(),
             //支付方式
-            'channel' => $this->getChannel(),
+            'channel'          => $this->getChannel(),
             //callback地址
-            'callback' => $this->getCallback(),
+            'callback'         => $this->getCallback(),
             //app_key
-            'app_key' => $this->getAppKey(),
+            'app_key'          => $this->getAppKey(),
             //货币
-            'currency' => $this->getCurrency(),
+            'currency'         => $this->getCurrency(),
             //私钥地址
             'private_key_path' => $this->getPrivateKeyPath(),
             //交易id
-            'ch_id' => $this->getChId()
+            'order_no'         => $this->getOrderNo()
         );
 
         return $data;
@@ -51,7 +51,6 @@ class ChargeQueryRequest extends AbstractChargeRequest
      * Send the request with specified data
      *
      * @param  mixed $data The data to send
-     *
      * @return ResponseInterface
      */
     public function sendData($data)
@@ -60,9 +59,49 @@ class ChargeQueryRequest extends AbstractChargeRequest
         \Pingpp\Pingpp::setApiKey($data['app_key']);           // 设置 API Key
         \Pingpp\Pingpp::setPrivateKeyPath($data['private_key_path']);   // 设置私钥
 
-        // 通过发起一次退款请求创建一个新的 refund 对象，只能对已经发生交易并且没有全额退款的 charge 对象发起退款
-        $ch = \Pingpp\Charge::retrieve($data['ch_id']);// Charge 对象的 id
+        // 查询支付成功列表
+        $ch = \Pingpp\Charge::all(array(
+            'limit'    => 10,
+            'app'      => array('id' => $data['app']),
+            'channel'  => $data['channel'],
+            'paid'     => true,
+            'refunded' => false,
+            'reversed' => false
+        ));
 
-        return json_decode($ch);// 输出 Ping++ 返回 Charge 对象
+        $data['is_paid'] = false;
+
+        foreach ($ch->data as $charge) {
+            if ($charge['order_no'] == $data['order_no'] && $charge['paid'] && ! $charge['refunded'] && ! $charge['reversed']) {
+                $data['is_paid'] = true;
+
+                $data['id']              = $charge->id;
+                $data["object"]          = $charge->object;
+                $data["created"]         = $charge->created;
+                $data["livemode"]        = $charge->livemode;
+                $data["paid"]            = $charge->paid;
+                $data["refunded"]        = $charge->refunded;
+                $data["reversed"]        = $charge->reversed;
+                $data["app"]             = $charge->app;
+                $data["channel"]         = $charge->channel;
+                $data["client_ip"]       = $charge->client_ip;
+                $data["amount"]          = $charge->amount;
+                $data["amount_settle"]   = $charge->amount_settle;
+                $data["currency"]        = $charge->currency;
+                $data["subject"]         = $charge->subject;
+                $data["body"]            = $charge->body;
+                $data["time_paid"]       = $charge->time_paid;
+                $data["time_expire"]     = $charge->time_expire;
+                $data["time_settle"]     = $charge->time_settle;
+                $data["amount_refunded"] = $charge->amount_refunded;
+                $data["failure_code"]    = $charge->failure_code;
+                $data["failure_msg"]     = $charge->failure_msg;
+                $data["description"]     = $charge->description;
+
+                break;
+            }
+        }
+
+        return $data;// 输出 Ping++ 返回 Charge 对象
     }
 }
