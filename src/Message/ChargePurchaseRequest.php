@@ -124,6 +124,6 @@ class ChargePurchaseRequest extends AbstractChargeRequest
             }
         }
 
-        return $this->response = new ChargePurchaseResponse($this, (array) json_decode($charge));
+        return $this->response = new ChargePurchaseResponse($this, $charge);
     }
 }
